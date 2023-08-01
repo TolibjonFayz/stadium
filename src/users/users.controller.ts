@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Res,
+  HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -14,6 +16,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { User } from './models/user.model';
 import { Response } from 'express';
+import { LoginUserDto } from './dto/login-user.dto';
+import { CookieGetter } from '../decorators/cookieGetter.docretor';
+import { FindUserDto } from './dto/find-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -27,6 +32,45 @@ export class UsersController {
     @Res({ passthrough: true }) res: Response,
   ) {
     return this.usersService.registration(createUserDto, res);
+  }
+
+  @ApiOperation({ summary: 'login user' })
+  @ApiResponse({ status: 201, type: User })
+  @HttpCode(HttpStatus.OK)
+  @Post('signin')
+  login(
+    @Body() loginUserDto: LoginUserDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.usersService.login(loginUserDto, res);
+  }
+
+  @ApiOperation({ summary: 'logout user' })
+  @ApiResponse({ status: 200, type: User })
+  @HttpCode(HttpStatus.OK)
+  @Post('signout')
+  logout(
+    @CookieGetter('refresh_token') refreshToken: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.usersService.logout(refreshToken, res);
+  }
+
+  @ApiOperation({ summary: 'logout user' })
+  @ApiResponse({ status: 200, type: User })
+  @HttpCode(HttpStatus.OK)
+  @Post(':id/refresh')
+  refresh(
+    @Param('id') id: string,
+    @CookieGetter('refresh_token') refreshToken: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.usersService.refreshToken(+id, refreshToken, res);
+  }
+
+  @Post('find')
+  findAll(@Body() findUserDto: FindUserDto) {
+    return this.usersService.findAll(findUserDto);
   }
 
   @Post()
