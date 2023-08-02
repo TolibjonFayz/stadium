@@ -30,7 +30,7 @@ export class User extends Model<User, UserAtrrs> {
   @Column({
     type: DataType.STRING,
   })
-  name: string;
+  first_name: string;
 
   @ApiProperty({ example: 'Bobirov', description: 'Foydalanuvchi familiyasi' })
   @Column({

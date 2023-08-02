@@ -14,7 +14,7 @@ export class MailService {
       subject: 'Welcome to Stadium App! Confirm your Email!',
       template: './confirmation',
       context: {
-        name: user.name,
+        name: user.first_name,
         url,
       },
     });

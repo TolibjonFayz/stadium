@@ -21,7 +21,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
           from: `"Stadium " <${config.get('MAILER_HOST')}>`,
         },
         template: {
-          dir: join(__dirname, 'teplates'),
+          dir: join(__dirname, 'templates'),
           adapter: new HandlebarsAdapter(),
           template: 'confirmation',
           options: {

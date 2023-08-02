@@ -224,4 +224,24 @@ export class UsersService {
     }
     return users;
   }
+
+  async activate(link: string) {
+    if (!link) {
+      throw new BadRequestException('Activation link not found');
+    }
+    const updateUser = await this.userRepo.update(
+      { is_active: true },
+      { where: { activation_link: link, is_active: false }, returning: true },
+    );
+
+    if (!updateUser[1][0]) {
+      throw new BadRequestException('User already activated');
+    }
+
+    const response = {
+      message: 'User activated successfully',
+      user: updateUser,
+    };
+    return response;
+  }
 }

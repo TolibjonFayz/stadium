@@ -9,6 +9,7 @@ import {
   Res,
   HttpStatus,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,6 +20,7 @@ import { Response } from 'express';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CookieGetter } from '../decorators/cookieGetter.docretor';
 import { FindUserDto } from './dto/find-user.dto';
+import { UserGuard } from '../guards/user.guard';
 
 @Controller('users')
 export class UsersController {
@@ -59,6 +61,7 @@ export class UsersController {
   @ApiOperation({ summary: 'logout user' })
   @ApiResponse({ status: 200, type: User })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(UserGuard)
   @Post(':id/refresh')
   refresh(
     @Param('id') id: string,
@@ -66,6 +69,13 @@ export class UsersController {
     @Res({ passthrough: true }) res: Response,
   ) {
     return this.usersService.refreshToken(+id, refreshToken, res);
+  }
+
+  @ApiOperation({ summary: 'activate user' })
+  @ApiResponse({ status: 200, type: [User] })
+  @Get('activate/:link')
+  activate(@Param('link') link: string) {
+    return this.usersService.activate(link);
   }
 
   @Post('find')
