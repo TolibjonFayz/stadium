@@ -58,7 +58,7 @@ export class UsersController {
     return this.usersService.logout(refreshToken, res);
   }
 
-  @ApiOperation({ summary: 'logout user' })
+  @ApiOperation({ summary: 'refresh user' })
   @ApiResponse({ status: 200, type: User })
   @HttpCode(HttpStatus.OK)
   @UseGuards(UserGuard)
